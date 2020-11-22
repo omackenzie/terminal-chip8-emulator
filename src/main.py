@@ -17,7 +17,6 @@ class Chip8Emulator:
 
     def __init__(self, rom_name):
         self.window = components.Display()
-
         self.keyboard = components.Keyboard()
         self.speaker = components.Speaker()
 
@@ -257,7 +256,7 @@ class Chip8Emulator:
                 for register_index in range(x+1):
                     self.v[register_index] = self.memory[self.i + register_index]
         else:
-            raise Exception(f'Unkown opcode: {opcode}')
+            raise Exception(f'Unknown opcode: {opcode}')
 
         self.v[x] %= 256
 
