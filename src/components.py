@@ -1,6 +1,7 @@
 import winsound
 
 import win32console, win32con, win32api
+import pywintypes
 
 
 class Display:
@@ -22,15 +23,19 @@ class Display:
     def set_window_size(self):
         """Sets the window and buffer size of the console"""
 
-        window_size = self.console_buffer.GetConsoleScreenBufferInfo()['Window']
-        coord = win32console.PyCOORDType(X = (self.cols*2), Y = self.rows)
-        self.console_buffer.SetConsoleScreenBufferSize(coord)
+        try:
+            window_size = self.console_buffer.GetConsoleScreenBufferInfo()['Window']
+            coord = win32console.PyCOORDType(X = (self.cols*2), Y = self.rows)
+            self.console_buffer.SetConsoleScreenBufferSize(coord)
 
-        window_size.Right = (self.cols*2) - 1
-        window_size.Bottom = self.rows - 1
+            window_size.Right = (self.cols*2) - 1
+            window_size.Bottom = self.rows - 1
 
-        self.console_buffer.SetConsoleWindowInfo(
-            Absolute=True, ConsoleWindow=window_size)
+            self.console_buffer.SetConsoleWindowInfo(
+                Absolute=True, ConsoleWindow=window_size)
+        except pywintypes.error:
+            raise Exception('Some issue occured when resizing the console, '
+                'try decreasing the size or setting it back to default')
 
     def render_display(self):
         """Converts the display array into a string and
